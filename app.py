@@ -98,38 +98,51 @@ def extract_features_from_code(source_code, file_ext='.py'):
 
 def setup_ml_model():
     """
-    Set up the machine learning model with some training data.
-    This is pretty basic for now - I collected these examples manually.
-    TODO: Get more training data to improve accuracy
+    Set up the machine learning model with expanded training data.
+    Increased dataset from 8 to 16 examples for better accuracy.
+    TODO: Continue adding more diverse examples for even better results
     """
-    # Training examples I put together
+    # Expanded training examples with more variety
     sample_data = {
         'code': [
-            # Some human-written examples I found
+            # Human-written examples (8 examples)
             'def calculate_sum(a, b):\n    """Calculate sum of two numbers"""\n    return a + b',
             
-            # Another human example
             'def process_data(data):\n    # Process the input data\n    result = []\n    for item in data:\n        if item > 0:\n            result.append(item * 2)\n    return result',
             
-            # TypeScript example from a project
             'interface User {\n  name: string;\n  age: number;\n}\n\nfunction greetUser(user: User): string {\n  return `Hello, ${user.name}!`;\n}',
             
-            # React component I wrote
             'import React, { useState } from "react";\n\nconst Counter: React.FC = () => {\n  const [count, setCount] = useState(0);\n  \n  return (\n    <div>\n      <p>Count: {count}</p>\n      <button onClick={() => setCount(count + 1)}>+</button>\n    </div>\n  );\n};',
             
-            # Some generated-looking code
-            '# Auto-generated function\ndef auto_function():\n    return "generated"',
+            # Additional human examples for better training
+            'function validateEmail(email) {\n    // Basic validation - might not catch everything\n    const regex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;\n    console.log("Checking email:", email);  // debug output\n    return regex.test(email);\n}',
             
-            # More generated style
+            'def find_maximum(numbers):\n    # Handle edge case\n    if not numbers:\n        return None\n    max_val = numbers[0]\n    for num in numbers[1:]:\n        if num > max_val:\n            max_val = num\n    return max_val',
+            
+            'const UserCard = ({ user }) => {\n  const [expanded, setExpanded] = useState(false);\n  \n  return (\n    <div className="user-card">\n      <h3>{user.name}</h3>\n      {expanded && <p>{user.bio}</p>}\n      <button onClick={() => setExpanded(!expanded)}>\n        {expanded ? "Show Less" : "Show More"}\n      </button>\n    </div>\n  );\n};',
+            
+            'public class Calculator {\n    private double result;\n    \n    public void add(double number) {\n        // Simple addition\n        result += number;\n    }\n    \n    public double getResult() {\n        return result;\n    }\n}',
+            
+            # AI-generated examples (8 examples)
+            'def auto_function():\n    return "generated"',
+            
             'const processArray = <T>(arr: T[]): T[] => arr.filter(Boolean).map(item => item);',
             
-            # Generated React
             'export const Button = ({ onClick, children }: { onClick: () => void; children: React.ReactNode }) => <button onClick={onClick}>{children}</button>;',
             
-            # Classic algorithm implementation
             'def quick_sort(arr):\n    if len(arr) <= 1:\n        return arr\n    pivot = arr[len(arr) // 2]\n    left = [x for x in arr if x < pivot]\n    middle = [x for x in arr if x == pivot]\n    right = [x for x in arr if x > pivot]\n    return quick_sort(left) + middle + quick_sort(right)',
+            
+            # Additional AI examples
+            'def factorial(n: int) -> int:\n    """Calculate factorial using recursion."""\n    return 1 if n <= 1 else n * factorial(n - 1)',
+            
+            'const memoize = <T extends (...args: any[]) => any>(fn: T): T => {\n  const cache = new Map();\n  return ((...args: any[]) => {\n    const key = JSON.stringify(args);\n    if (cache.has(key)) return cache.get(key);\n    const result = fn(...args);\n    cache.set(key, result);\n    return result;\n  }) as T;\n};',
+            
+            'class DataProcessor:\n    @staticmethod\n    def clean_data(data: List[Dict]) -> List[Dict]:\n        return [item for item in data if all(v is not None for v in item.values())]\n    \n    @classmethod\n    def from_json(cls, json_str: str):\n        return cls(json.loads(json_str))',
+            
+            'function binarySearch(arr: number[], target: number): number {\n  let left = 0, right = arr.length - 1;\n  while (left <= right) {\n    const mid = Math.floor((left + right) / 2);\n    if (arr[mid] === target) return mid;\n    if (arr[mid] < target) left = mid + 1;\n    else right = mid - 1;\n  }\n  return -1;\n}'
         ],
-        'label': ['human', 'human', 'human', 'human', 'ai', 'ai', 'ai', 'ai']
+        'label': ['human', 'human', 'human', 'human', 'human', 'human', 'human', 'human',
+                 'ai', 'ai', 'ai', 'ai', 'ai', 'ai', 'ai', 'ai']
     }
     
     df = pd.DataFrame(sample_data)
