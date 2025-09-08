@@ -6,7 +6,7 @@ A personal project for analyzing different coding patterns and styles in various
 
 **🚀 Try it live**: [https://ai-code-identifier.onrender.com](https://ai-code-identifier.onrender.com)
 
-*The app is deployed on Render.com and ready to analyze your code files!*
+_The app is deployed on Render.com and ready to analyze your code files!_
 
 ## �🎥 Demo Video
 

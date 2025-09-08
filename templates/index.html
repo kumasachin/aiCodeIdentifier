@@ -78,15 +78,43 @@
         color: #3498db;
         margin-bottom: 15px;
       }
+      .logo-image {
+        width: 80px;
+        height: 80px;
+        margin-bottom: 15px;
+        border-radius: 12px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+      }
+      .logo-image:hover {
+        transform: scale(1.05);
+      }
     </style>
   </head>
   <body>
     <div class="container">
       <div class="main-container">
         <div class="header-section">
-          <div class="feature-icon">
-            <i class="fas fa-user-graduate" style="color: #3498db;"></i>
-            <i class="fas fa-glasses" style="position: relative; left: -15px; top: -5px; font-size: 0.7em; color: #2c3e50;"></i>
+          <div class="text-center">
+            <img
+              src="{{ url_for('static', filename='images/logo.webp') }}"
+              alt="Code Analysis Tool Logo"
+              class="logo-image"
+              onerror="this.style.display='none'; document.getElementById('fallback-icon').style.display='block';"
+            />
+            <div id="fallback-icon" style="display: none" class="feature-icon">
+              <i class="fas fa-user-graduate" style="color: #3498db"></i>
+              <i
+                class="fas fa-glasses"
+                style="
+                  position: relative;
+                  left: -15px;
+                  top: -5px;
+                  font-size: 0.7em;
+                  color: #2c3e50;
+                "
+              ></i>
+            </div>
           </div>
           <h1 class="display-4">Code Analysis Tool</h1>
           <p class="lead text-muted">
@@ -161,7 +189,8 @@
                   </p>
                   <p class="text-warning mt-1 mb-0">
                     <small
-                      ><i class="fas fa-exclamation-triangle"></i> Maximum 50 files per folder</small
+                      ><i class="fas fa-exclamation-triangle"></i> Maximum 50
+                      files per folder</small
                     >
                   </p>
                 </div>
@@ -451,7 +480,11 @@
 
         // Check file limit (maximum 50 files)
         if (files.length > 50) {
-          alert("⚠️ File Limit Exceeded!\n\nYou selected " + files.length + " files, but the maximum allowed is 50 files per folder upload.\n\nPlease select a smaller folder or upload files in batches.");
+          alert(
+            "⚠️ File Limit Exceeded!\n\nYou selected " +
+              files.length +
+              " files, but the maximum allowed is 50 files per folder upload.\n\nPlease select a smaller folder or upload files in batches."
+          );
           folderInput.value = ""; // Clear the input
           return;
         }
