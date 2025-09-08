@@ -36,6 +36,7 @@ A personal project for analyzing different coding patterns and styles in various
 The project includes comprehensive unit tests covering all major functionality:
 
 ### Quick Test Run
+
 ```bash
 python run_tests.py -f          # Fast mode (using unittest)
 python run_tests.py             # Standard mode (using pytest)
@@ -44,6 +45,7 @@ python run_tests.py -c          # With coverage report
 ```
 
 ### Test Coverage
+
 - **24 test cases** covering:
   - Feature extraction (Python, TypeScript, React)
   - Machine learning model setup and training
@@ -53,6 +55,7 @@ python run_tests.py -c          # With coverage report
   - Directory scanning and file processing
 
 ### Coverage Reports
+
 Run `python run_tests.py -c` to generate detailed coverage reports in the `htmlcov/` directory.
 
 Current test coverage: **55%** (app.py: 57%, main.py: 51%)
