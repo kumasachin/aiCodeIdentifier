@@ -2,7 +2,13 @@
 
 A personal project for analyzing different coding patterns and styles in various programming languages.
 
-## 🎥 Demo Video
+## � Live Demo
+
+**🚀 Try it live**: [https://ai-code-identifier.onrender.com](https://ai-code-identifier.onrender.com)
+
+*The app is deployed on Render.com and ready to analyze your code files!*
+
+## �🎥 Demo Video
 
 [![AI Code Identifier Demo](https://img.youtube.com/vi/_smHNjSCW64/maxresdefault.jpg)](https://youtu.be/_smHNjSCW64)
 

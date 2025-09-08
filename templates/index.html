@@ -85,7 +85,8 @@
       <div class="main-container">
         <div class="header-section">
           <div class="feature-icon">
-            <i class="fas fa-code"></i>
+            <i class="fas fa-user-graduate" style="color: #3498db;"></i>
+            <i class="fas fa-glasses" style="position: relative; left: -15px; top: -5px; font-size: 0.7em; color: #2c3e50;"></i>
           </div>
           <h1 class="display-4">Code Analysis Tool</h1>
           <p class="lead text-muted">
@@ -156,6 +157,11 @@
                     <small
                       >Analyzes all supported files in the selected
                       folder</small
+                    >
+                  </p>
+                  <p class="text-warning mt-1 mb-0">
+                    <small
+                      ><i class="fas fa-exclamation-triangle"></i> Maximum 50 files per folder</small
                     >
                   </p>
                 </div>
@@ -442,6 +448,13 @@
         const folderInput = document.getElementById("folderInput");
         const files = folderInput.files;
         if (files.length === 0) return;
+
+        // Check file limit (maximum 50 files)
+        if (files.length > 50) {
+          alert("⚠️ File Limit Exceeded!\n\nYou selected " + files.length + " files, but the maximum allowed is 50 files per folder upload.\n\nPlease select a smaller folder or upload files in batches.");
+          folderInput.value = ""; // Clear the input
+          return;
+        }
 
         console.log("Starting folder analysis for", files.length, "files");
 

@@ -295,6 +295,12 @@ def analyze_folder():
         if not files:
             return jsonify({'error': 'No folder selected'})
         
+        # Check file limit (maximum 50 files)
+        if len(files) > 50:
+            return jsonify({
+                'error': f'File limit exceeded! You uploaded {len(files)} files, but the maximum allowed is 50 files per folder upload. Please select a smaller folder or upload in batches.'
+            })
+        
         # Filter for supported file types
         supported_extensions = {'.py', '.js', '.ts', '.tsx', '.jsx', '.java', '.cpp', '.c', '.cs', '.php', '.rb'}
         
