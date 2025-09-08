@@ -1,0 +1,13 @@
+{
+  "name": "ai-code-identifier",
+  "build": {
+    "command": "pip install -r requirements.txt"
+  },
+  "start": {
+    "command": "python app.py"
+  },
+  "env": {
+    "FLASK_ENV": "production",
+    "PORT": "8080"
+  }
+}

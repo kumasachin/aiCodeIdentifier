@@ -221,6 +221,15 @@ def home():
     """Main page - just render the template"""
     return render_template('index.html')
 
+@app.route('/health')
+def health_check():
+    """Health check endpoint for monitoring"""
+    return jsonify({
+        'status': 'healthy',
+        'model_loaded': classifier_model is not None,
+        'timestamp': datetime.now().isoformat()
+    })
+
 @app.route('/analyze', methods=['POST'])
 def analyze_files():
     """Handle file uploads and analyze them"""
@@ -383,4 +392,8 @@ if __name__ == '__main__':
             print(f"Failed to initialize model: {e}")
     
     # Run the Flask app
-    app.run(host='0.0.0.0', port=8080, debug=True)
+    # Use environment PORT for production deployment
+    port = int(os.environ.get('PORT', 8080))
+    debug_mode = os.environ.get('FLASK_ENV') != 'production'
+    
+    app.run(host='0.0.0.0', port=port, debug=debug_mode)
