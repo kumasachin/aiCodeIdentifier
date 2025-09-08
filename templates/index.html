@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Code Analysis Tool</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background-color: #f8f9fa;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+      .main-container {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-top: 20px;
+        padding: 30px;
+      }
+      .result-card {
+        margin-bottom: 15px;
+        border-radius: 8px;
+        transition: transform 0.2s ease;
+      }
+      .result-card:hover {
+        transform: translateY(-2px);
+      }
+      .ai-prediction {
+        border-left: 4px solid #e74c3c;
+      }
+      .human-prediction {
+        border-left: 4px solid #27ae60;
+      }
+      .confidence-high {
+        color: #27ae60;
+        font-weight: bold;
+      }
+      .confidence-medium {
+        color: #f39c12;
+        font-weight: bold;
+      }
+      .confidence-low {
+        color: #e74c3c;
+        font-weight: bold;
+      }
+      .upload-zone {
+        border: 3px dashed #bdc3c7;
+        border-radius: 12px;
+        padding: 50px 20px;
+        text-align: center;
+        transition: all 0.3s ease;
+        background: #f8f9fa;
+        cursor: pointer;
+      }
+      .upload-zone:hover {
+        border-color: #3498db;
+        background-color: #ecf0f1;
+      }
+      .upload-zone.file-dragover {
+        border-color: #2980b9;
+        background-color: #d5e7f7;
+        transform: scale(1.02);
+      }
+      .header-section {
+        text-align: center;
+        margin-bottom: 40px;
+        padding: 20px 0;
+      }
+      .feature-icon {
+        font-size: 3em;
+        color: #3498db;
+        margin-bottom: 15px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="main-container">
+        <div class="header-section">
+          <div class="feature-icon">
+            <i class="fas fa-code"></i>
+          </div>
+          <h1 class="display-4">Code Analysis Tool</h1>
+          <p class="lead text-muted">
+            Upload your code files to analyze different coding patterns and
+            styles
+          </p>
+          <small class="text-muted">
+            Works with Python, JavaScript, TypeScript, React, Java, C++, C#,
+            PHP, and Ruby
+          </small>
+        </div>
+
+        <!-- File Upload Section -->
+        <div class="row mb-4">
+          <div class="col-md-6">
+            <div class="card h-100">
+              <div class="card-header">
+                <h5><i class="fas fa-upload"></i> Upload Individual Files</h5>
+              </div>
+              <div class="card-body">
+                <div class="upload-zone" id="uploadArea">
+                  <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
+                  <p class="mb-3">
+                    Drag and drop files here or click to browse
+                  </p>
+                  <input
+                    type="file"
+                    id="fileInput"
+                    multiple
+                    accept=".py,.js,.ts,.tsx,.jsx,.java,.cpp,.c,.cs,.php,.rb"
+                    style="display: none"
+                  />
+                  <button
+                    class="btn btn-primary"
+                    onclick="document.getElementById('fileInput').click()"
+                  >
+                    <i class="fas fa-folder-open"></i> Choose Files
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="card h-100">
+              <div class="card-header">
+                <h5><i class="fas fa-folder"></i> Upload Entire Folder</h5>
+              </div>
+              <div class="card-body">
+                <div class="upload-zone" id="folderUploadArea">
+                  <i class="fas fa-folder-open fa-3x text-muted mb-3"></i>
+                  <p class="mb-3">Select a folder to analyze all code files</p>
+                  <input
+                    type="file"
+                    id="folderInput"
+                    webkitdirectory
+                    directory
+                    multiple
+                    style="display: none"
+                  />
+                  <button
+                    class="btn btn-success"
+                    onclick="document.getElementById('folderInput').click()"
+                  >
+                    <i class="fas fa-folder-plus"></i> Choose Folder
+                  </button>
+                  <p class="text-muted mt-2 mb-0">
+                    <small
+                      >Analyzes all supported files in the selected
+                      folder</small
+                    >
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Text Input Section -->
+        <div class="row mb-5">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h5><i class="fas fa-code"></i> Paste Code Directly</h5>
+              </div>
+              <div class="card-body">
+                <div class="mb-3">
+                  <label for="fileType" class="form-label">File Type</label>
+                  <select class="form-select" id="fileType">
+                    <option value=".py">Python (.py)</option>
+                    <option value=".js">JavaScript (.js)</option>
+                    <option value=".ts">TypeScript (.ts)</option>
+                    <option value=".tsx">React TypeScript (.tsx)</option>
+                    <option value=".jsx">React JavaScript (.jsx)</option>
+                    <option value=".java">Java (.java)</option>
+                    <option value=".cpp">C++ (.cpp)</option>
+                    <option value=".c">C (.c)</option>
+                    <option value=".cs">C# (.cs)</option>
+                    <option value=".php">PHP (.php)</option>
+                    <option value=".rb">Ruby (.rb)</option>
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label for="customFilename" class="form-label"
+                    >Custom Filename (optional)</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="customFilename"
+                    placeholder="e.g., MyComponent"
+                  />
+                </div>
+                <div class="mb-3">
+                  <label for="codeInput" class="form-label">Code</label>
+                  <textarea
+                    class="form-control"
+                    id="codeInput"
+                    rows="10"
+                    placeholder="Paste your code here..."
+                  ></textarea>
+                </div>
+                <button class="btn btn-success" onclick="analyzeText()">
+                  <i class="fas fa-search"></i> Analyze Code
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Processing Message Section -->
+        <div class="row" id="processingSection" style="display: none">
+          <div class="col-12">
+            <div class="card border-primary">
+              <div class="card-body text-center">
+                <div class="spinner-border text-primary mb-3" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+                <h5 id="processingTitle" class="text-primary">
+                  Processing Files...
+                </h5>
+                <p id="processingMessage" class="text-muted mb-3">
+                  Analyzing your code files, please wait...
+                </p>
+                <div class="progress mb-3">
+                  <div
+                    id="inlineProgressBar"
+                    class="progress-bar progress-bar-striped progress-bar-animated"
+                    role="progressbar"
+                    style="width: 0%"
+                    aria-valuenow="0"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                  ></div>
+                </div>
+                <small id="processingStatus" class="text-muted"
+                  >Initializing analysis...</small
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Results Modal/Overlay -->
+      <div
+        class="modal fade"
+        id="resultsModal"
+        tabindex="-1"
+        aria-labelledby="resultsModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-xl">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="resultsModalLabel">
+                <i class="fas fa-chart-bar"></i> Analysis Results
+              </h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <div id="modalSummaryStats" class="row mb-4"></div>
+              <div id="modalResults"></div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-primary" onclick="downloadReport()">
+                <i class="fas fa-download"></i> Download Report
+              </button>
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Progress Modal -->
+      <div
+        class="modal fade"
+        id="progressModal"
+        tabindex="-1"
+        aria-labelledby="progressModalLabel"
+        aria-hidden="true"
+        data-bs-backdrop="static"
+      >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="progressModalLabel">
+                <i class="fas fa-cog fa-spin"></i> Analyzing Files
+              </h5>
+            </div>
+            <div class="modal-body">
+              <div class="progress mb-3">
+                <div
+                  id="progressBar"
+                  class="progress-bar progress-bar-striped progress-bar-animated"
+                  role="progressbar"
+                  style="width: 0%"
+                  aria-valuenow="0"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                ></div>
+              </div>
+              <div id="progressStatus" class="text-center">
+                <p class="mb-2">Preparing analysis...</p>
+                <div id="fileProgress"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      let currentResults = [];
+      let progressModal, resultsModal;
+
+      // Initialize modals when DOM is loaded
+      document.addEventListener("DOMContentLoaded", function () {
+        progressModal = new bootstrap.Modal(
+          document.getElementById("progressModal")
+        );
+        resultsModal = new bootstrap.Modal(
+          document.getElementById("resultsModal")
+        );
+
+        // Setup file upload handlers
+        setupFileUploadHandlers();
+      });
+
+      function setupFileUploadHandlers() {
+        const fileInput = document.getElementById("fileInput");
+        const uploadArea = document.getElementById("uploadArea");
+        const folderInput = document.getElementById("folderInput");
+        const folderUploadArea = document.getElementById("folderUploadArea");
+
+        // Individual file upload setup
+        if (uploadArea && fileInput) {
+          uploadArea.addEventListener("click", () => fileInput.click());
+          uploadArea.addEventListener("dragover", handleDragOver);
+          uploadArea.addEventListener("dragleave", handleDragLeave);
+          uploadArea.addEventListener("drop", handleFileDrop);
+          fileInput.addEventListener("change", analyzeFiles);
+        }
+
+        // Folder upload setup
+        if (folderUploadArea && folderInput) {
+          folderUploadArea.addEventListener("click", () => folderInput.click());
+          folderInput.addEventListener("change", analyzeFolderFiles);
+        }
+      }
+
+      function handleDragOver(e) {
+        e.preventDefault();
+        const uploadArea = document.getElementById("uploadArea");
+        uploadArea.classList.add("file-dragover");
+      }
+
+      function handleDragLeave(e) {
+        const uploadArea = document.getElementById("uploadArea");
+        uploadArea.classList.remove("file-dragover");
+      }
+
+      function handleFileDrop(e) {
+        e.preventDefault();
+        const uploadArea = document.getElementById("uploadArea");
+        const fileInput = document.getElementById("fileInput");
+        uploadArea.classList.remove("file-dragover");
+        fileInput.files = e.dataTransfer.files;
+        analyzeFiles();
+      }
+
+      function analyzeFiles() {
+        const fileInput = document.getElementById("fileInput");
+        const files = fileInput.files;
+        if (files.length === 0) return;
+
+        console.log("Starting file analysis for", files.length, "files");
+
+        const formData = new FormData();
+        for (let file of files) {
+          formData.append("files", file);
+        }
+
+        // Show inline processing message instead of modal
+        showProcessingMessage(
+          "Analyzing " + files.length + " file(s)...",
+          "Uploading and processing your code files..."
+        );
+        updateInlineProgress(20, "Processing files...");
+
+        fetch("/analyze", {
+          method: "POST",
+          body: formData,
+        })
+          .then((response) => {
+            updateInlineProgress(70, "Processing server response...");
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            updateInlineProgress(100, "Analysis complete!");
+            console.log("Analysis results:", data);
+            setTimeout(() => {
+              hideProcessingMessage();
+              if (data.error) {
+                alert("Error: " + data.error);
+              } else {
+                displayResults(data.results, data.summary, "files");
+              }
+            }, 500);
+          })
+          .catch((error) => {
+            console.error("Analysis error:", error);
+            hideProcessingMessage();
+            alert("Error: " + error.message);
+          });
+      }
+
+      function analyzeFolderFiles() {
+        const folderInput = document.getElementById("folderInput");
+        const files = folderInput.files;
+        if (files.length === 0) return;
+
+        console.log("Starting folder analysis for", files.length, "files");
+
+        const formData = new FormData();
+        for (let file of files) {
+          formData.append("folder", file);
+        }
+
+        // Show inline processing message instead of modal
+        showProcessingMessage(
+          "Analyzing folder with " + files.length + " file(s)...",
+          "Processing folder structure and analyzing all code files..."
+        );
+        updateInlineProgress(20, "Processing folder structure...");
+
+        fetch("/analyze-folder", {
+          method: "POST",
+          body: formData,
+        })
+          .then((response) => {
+            updateInlineProgress(70, "Analyzing code patterns...");
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            updateInlineProgress(100, "Folder analysis complete!");
+            console.log("Folder analysis results:", data);
+            setTimeout(() => {
+              hideProcessingMessage();
+              if (data.error) {
+                alert("Error: " + data.error);
+              } else {
+                displayResults(data.results, data.summary, "folder");
+              }
+            }, 500);
+          })
+          .catch((error) => {
+            console.error("Folder analysis error:", error);
+            hideProcessingMessage();
+            alert("Error: " + error.message);
+          });
+      }
+
+      function analyzeText() {
+        const code = document.getElementById("codeInput").value;
+        const fileType = document.getElementById("fileType")?.value || ".py";
+        const customName =
+          document.getElementById("customFilename")?.value || "input";
+
+        const filename = customName + fileType;
+
+        if (!code.trim()) {
+          alert("Please enter some code to analyze.");
+          return;
+        }
+
+        console.log("Starting text analysis for:", filename);
+
+        showProgressModal("Analyzing code snippet...");
+        updateProgress(30, "Processing code...");
+
+        fetch("/analyze-text", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            code: code,
+            filename: filename,
+          }),
+        })
+          .then((response) => {
+            updateProgress(80, "Generating results...");
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            updateProgress(100, "Analysis complete!");
+            console.log("Text analysis results:", data);
+            setTimeout(() => {
+              hideProgressModal();
+              if (data.error) {
+                alert("Error: " + data.error);
+              } else {
+                displayResults(
+                  [data],
+                  {
+                    total_files: 1,
+                    ai_predicted: data.prediction === "ai" ? 1 : 0,
+                    human_predicted: data.prediction === "human" ? 1 : 0,
+                    average_confidence: data.confidence,
+                  },
+                  "text"
+                );
+              }
+            }, 500);
+          })
+          .catch((error) => {
+            console.error("Text analysis error:", error);
+            hideProgressModal();
+            alert("Error: " + error.message);
+          });
+      }
+
+      function showProgressModal(title) {
+        document.getElementById("progressModalLabel").innerHTML =
+          '<i class="fas fa-cog fa-spin"></i> ' + title;
+        updateProgress(0, "Initializing...");
+        if (progressModal) {
+          progressModal.show();
+        }
+      }
+
+      function hideProgressModal() {
+        if (progressModal) {
+          progressModal.hide();
+        }
+      }
+
+      function updateProgress(percentage, status) {
+        const progressBar = document.getElementById("progressBar");
+        const progressStatus = document.getElementById("progressStatus");
+
+        if (progressBar) {
+          progressBar.style.width = percentage + "%";
+          progressBar.setAttribute("aria-valuenow", percentage);
+        }
+
+        if (progressStatus) {
+          progressStatus.innerHTML = '<p class="mb-2">' + status + "</p>";
+        }
+      }
+
+      // New functions for inline processing messages
+      function showProcessingMessage(title, message) {
+        document.getElementById("processingTitle").textContent = title;
+        document.getElementById("processingMessage").textContent = message;
+        document.getElementById("processingSection").style.display = "block";
+
+        // Scroll to the processing section
+        document.getElementById("processingSection").scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }
+
+      function hideProcessingMessage() {
+        document.getElementById("processingSection").style.display = "none";
+      }
+
+      function updateInlineProgress(percentage, status) {
+        const progressBar = document.getElementById("inlineProgressBar");
+        const progressStatus = document.getElementById("processingStatus");
+
+        if (progressBar) {
+          progressBar.style.width = percentage + "%";
+          progressBar.setAttribute("aria-valuenow", percentage);
+        }
+
+        if (progressStatus) {
+          progressStatus.textContent = status;
+        }
+      }
+
+      function displayResults(results, summary, analysisType) {
+        console.log("Displaying results:", results, summary);
+        currentResults = { results, summary };
+
+        // Generate summary statistics HTML
+        const summaryHtml = generateSummaryHTML(summary);
+
+        // Generate detailed results HTML
+        const resultsHtml = generateResultsHTML(results, analysisType);
+
+        // Update modal content
+        document.getElementById("modalSummaryStats").innerHTML = summaryHtml;
+        document.getElementById("modalResults").innerHTML = resultsHtml;
+
+        // Show results modal
+        if (resultsModal) {
+          resultsModal.show();
+        }
+      }
+
+      function generateSummaryHTML(summary) {
+        return `
+          <div class="col-md-3">
+            <div class="card bg-primary text-white">
+              <div class="card-body text-center">
+                <h3>${summary.total_files || 0}</h3>
+                <p class="mb-0">Total Files</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card bg-danger text-white">
+              <div class="card-body text-center">
+                <h3>${summary.ai_predicted || 0}</h3>
+                <p class="mb-0">AI Generated</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card bg-success text-white">
+              <div class="card-body text-center">
+                <h3>${summary.human_predicted || 0}</h3>
+                <p class="mb-0">Human Written</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card bg-info text-white">
+              <div class="card-body text-center">
+                <h3>${Math.round(summary.average_confidence || 0)}%</h3>
+                <p class="mb-0">Avg Confidence</p>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      function generateResultsHTML(results, analysisType) {
+        if (!results || results.length === 0) {
+          return '<div class="alert alert-warning">No results to display.</div>';
+        }
+
+        return results
+          .map((result) => {
+            if (result.error) {
+              return `
+                <div class="card result-card border-warning mb-3">
+                  <div class="card-body">
+                    <h6 class="card-title text-warning">
+                      <i class="fas fa-exclamation-triangle"></i> ${result.file}
+                    </h6>
+                    <p class="text-danger">${result.error}</p>
+                  </div>
+                </div>
+              `;
+            }
+
+            const confidenceClass =
+              result.confidence >= 80
+                ? "confidence-high"
+                : result.confidence >= 60
+                ? "confidence-medium"
+                : "confidence-low";
+            const predictionClass =
+              result.prediction === "ai" ? "ai-prediction" : "human-prediction";
+            const icon =
+              result.prediction === "ai" ? "fas fa-robot" : "fas fa-user";
+            const fileTypeDisplay = result.file_type || "Unknown";
+
+            return `
+              <div class="card result-card ${predictionClass} mb-3">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-md-8">
+                      <h6 class="card-title">
+                        <i class="${icon}"></i> ${result.file}
+                        <span class="badge bg-secondary ms-2">${fileTypeDisplay}</span>
+                      </h6>
+                      <p class="mb-1">
+                        <strong>Prediction:</strong> 
+                        <span class="badge ${
+                          result.prediction === "ai"
+                            ? "bg-danger"
+                            : "bg-success"
+                        }">
+                          ${result.prediction.toUpperCase()}
+                        </span>
+                      </p>
+                      <p class="mb-1">
+                        <strong>Confidence:</strong> 
+                        <span class="${confidenceClass}">${
+              result.confidence
+            }%</span>
+                      </p>
+                    </div>
+                    <div class="col-md-4">
+                      <small class="text-muted">
+                        Lines: ${result.lines_of_code || 0}<br>
+                        Characters: ${result.character_count || 0}<br>
+                        AI: ${result.ai_probability || 0}% | Human: ${
+              result.human_probability || 0
+            }%
+                      </small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            `;
+          })
+          .join("");
+      }
+
+      function downloadReport() {
+        if (!currentResults.results) return;
+
+        const reportData = {
+          timestamp: new Date().toISOString(),
+          summary: currentResults.summary,
+          results: currentResults.results,
+        };
+
+        const blob = new Blob([JSON.stringify(reportData, null, 2)], {
+          type: "application/json",
+        });
+
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `ai-analysis-report-${
+          new Date().toISOString().split("T")[0]
+        }.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
+    </script>
+  </body>
+</html>

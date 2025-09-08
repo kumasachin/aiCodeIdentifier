@@ -1,0 +1,9 @@
+scikit-learn
+pandas
+jinja2
+flask
+gunicorn
+
+# Testing dependencies
+pytest
+pytest-cov
