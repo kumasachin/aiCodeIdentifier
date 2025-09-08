@@ -63,3 +63,7 @@ Current test coverage: **55%** (app.py: 57%, main.py: 51%)
 ## Notes
 
 This is a personal project I've been working on to explore different coding patterns. The analysis is based on various code features like comment styles, function definitions, complexity, etc. Still experimenting with improving accuracy!
+
+<!-- Development Note: I have extensively used AI assistance for developing this code,
+     including architecture design, implementation, testing, and documentation.
+     This project serves as both a learning exercise and a practical tool. -->
