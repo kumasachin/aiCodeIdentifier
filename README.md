@@ -2,6 +2,14 @@
 
 A personal project for analyzing different coding patterns and styles in various programming languages.
 
+## 🎥 Demo Video
+
+[![AI Code Identifier Demo](https://img.youtube.com/vi/_smHNjSCW64/maxresdefault.jpg)](https://youtu.be/_smHNjSCW64)
+
+**Watch the demo**: [AI Code Identifier in Action](https://youtu.be/_smHNjSCW64)
+
+_See the tool analyzing different code files, showing confidence scores, and demonstrating both file upload and text input features._
+
 ## What it does
 
 - Analyzes code files to identify different writing patterns
